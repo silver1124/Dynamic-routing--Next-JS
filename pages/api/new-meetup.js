@@ -17,16 +17,16 @@ async function handler(req, res) {
     //we insert this to database user insertOne{} below we pass data  => const { title, image, addres, description } = data;
 
     const client = await MongoClient.connect(
-      "mongodb+srv://vaibhavdesai510:0LpLmG5cJAsM73Rq@cluster0.7wbat33.mongodb.net/meetups?retryWrites=true&w=majority"
+      "mongodb+srv://NextJs:p09wxZ0eUIyWL5RB@cluster0.2chvv80.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp"
     );
 
     const db = client.db();
 
     const meetupsCollections = db.collection("meetups");
 
-    const result = await meetupsCollections.insertOne({ data });
+    const result = await meetupsCollections.insertOne( data );
 
-    // console.log(result);
+    console.log(result);
 
     client.close();
 

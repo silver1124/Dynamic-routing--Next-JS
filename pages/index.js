@@ -1,3 +1,4 @@
+import { MongoClient } from "mongodb";
 import MeetUpList from "../components/meetups/MeetupList";
 const DUMMY_MEETUPS = [
   {
@@ -26,35 +27,48 @@ function HomePage(props) {
 }
 
 export async function getStaticProps() {
-  // fetch data from API
-  //  return must Object
-  // must have props property
-  // this props we need in HomePage as props.
+  // fetch data from API :
+
+  const client = await MongoClient.connect(
+    "mongodb+srv://NextJs:p09wxZ0eUIyWL5RB@cluster0.2chvv80.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp"
+  );
+
+  const db = client.db();
+
+  const meetupsCollection = db.collection("meetups");
+
+  const meetups = await meetupsCollection.find().toArray();
+
+  console.log(meetups);
+
+  client.close();
+
+  //  here in meetups : Dummy_Meetups  <= we get that from database .so we write meetups.map not DUMMY_MEALS (Dummydata)
   return {
     props: {
-      meetups: DUMMY_MEETUPS,
+      meetups: meetups.map((meetup) => ({
+        title: meetup.data.title,
+        address: meetup.data.address,
+        image: meetup.data.image,
+        id: meetup._id.toString(),
+      })),
     },
-    revalidate: 5,
+    revalidate: 1,
   };
 }
 
 // ========  getServerSideProps()============>>
-
 // serverSideProp guranteed us to run at every req
 // This function run on the server after deployment
-
 // export async function getServerSideProps(context) {
 //   const req = context.req;
 //   const res = context.res;
-
 //   // fetch data from API
 //   // Any code we write here run on server not on client
-
 //   return {
 //     props: {
 //       meetups: DUMMY_MEETUPS,
 //     },
 //   };
 // }
-
 export default HomePage;
