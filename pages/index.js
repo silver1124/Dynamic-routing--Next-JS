@@ -1,5 +1,4 @@
 import MeetUpList from "../components/meetups/MeetupList";
-
 const DUMMY_MEETUPS = [
   {
     id: "m1",
@@ -18,13 +17,44 @@ const DUMMY_MEETUPS = [
     description: "This is a second  meetup",
   },
 ];
-
-function HomePage() {
+function HomePage(props) {
   return (
     <>
-      <MeetUpList meetups={DUMMY_MEETUPS} />
+      <MeetUpList meetups={props.meetups} />
     </>
   );
 }
+
+export async function getStaticProps() {
+  // fetch data from API
+  //  return must Object
+  // must have props property
+  // this props we need in HomePage as props.
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS,
+    },
+    revalidate: 5,
+  };
+}
+
+// ========  getServerSideProps()============>>
+
+// serverSideProp guranteed us to run at every req
+// This function run on the server after deployment
+
+// export async function getServerSideProps(context) {
+//   const req = context.req;
+//   const res = context.res;
+
+//   // fetch data from API
+//   // Any code we write here run on server not on client
+
+//   return {
+//     props: {
+//       meetups: DUMMY_MEETUPS,
+//     },
+//   };
+// }
 
 export default HomePage;
